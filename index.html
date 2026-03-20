@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disaster Help Web Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  
+  <style>
+    /* Landing Specific Styles */
+    .hero-section {
+      min-height: calc(100vh - 120px);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://images.unsplash.com/photo-1469502909403-1fbced24e12d?auto=format&fit=crop&q=80') center/cover no-repeat;
+      opacity: 0.15;
+      z-index: -1;
+      filter: grayscale(100%) contrast(1.2);
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 0%, #a0aab2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .features-section {
+      padding: 5rem 0;
+      background: linear-gradient(180deg, transparent, rgba(15, 17, 21, 0.8));
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      padding: 2.5rem;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-section {
+      padding: 4rem 0;
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .stats-grid {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .hero-cta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Alert Ticker -->
+  <div class="alert-ticker" id="globalTicker" style="display: none;">
+    <div class="ticker-content" id="tickerText"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <i class="fa-solid fa-heart-pulse"></i>
+        Disaster Help Portal
+      </a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#how-it-works">How it Works</a>
+        <a href="login.html" class="btn btn-secondary"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="register.html" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="container hero-content animate-fade-in">
+      <h1 class="hero-title">Real-Time Assistance When It Matters Most</h1>
+      <p class="hero-subtitle">A centralized platform connecting disaster victims with volunteers and emergency services for rapid, life-saving response.</p>
+      <div class="hero-cta">
+        <button id="ctaVictim" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+          <i class="fa-solid fa-triangle-exclamation"></i> I Need Help
+        </button>
+        <button id="ctaVolunteer" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+          <i class="fa-solid fa-handshake-angle"></i> Become a Volunteer
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container stats-grid">
+      <div>
+        <div class="stat-value" id="statUsers">0</div>
+        <div class="stat-label">Active Volunteers</div>
+      </div>
+      <div>
+        <div class="stat-value" id="statReqs">0</div>
+        <div class="stat-label">Lives Assisted</div>
+      </div>
+      <div>
+        <div class="stat-value" id="statTime">15m</div>
+        <div class="stat-label">Avg Response Time</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="features-section">
+    <div class="container">
+      <h2 class="text-center mb-5" style="font-size: 2.5rem;">How It Works</h2>
+      <div class="features-grid">
+        <div class="glass-panel feature-card">
+          <i class="fa-solid fa-mobile-screen feature-icon"></i>
+          <h3>1. Report Incident</h3>
+          <p class="text-muted mt-3">Victims quickly request help (Food, Medical, Rescue) and share direct GPS coordinates securely.</p>
+        </div>
+        <div class="glass-panel feature-card">
+          <i class="fa-solid fa-satellite-dish feature-icon"></i>
+          <h3>2. Real-Time Broadcast</h3>
+          <p class="text-muted mt-3">The system instantly alerts nearby verified volunteers and emergency response administrators.</p>
+        </div>
+        <div class="glass-panel feature-card">
+          <i class="fa-solid fa-truck-medical feature-icon"></i>
+          <h3>3. Rapid Response</h3>
+          <p class="text-muted mt-3">Volunteers accept requests, navigate to the exact location via map, and provide critical relief.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background: rgba(10,11,13,0.9); padding: 3rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
+    <div class="container">
+      <h3 style="color: var(--primary-color);"><i class="fa-solid fa-heart-pulse"></i> Disaster Help Portal</h3>
+      <p class="text-muted mt-2">Connecting communities during crises.</p>
+      <div class="mt-4 text-muted" style="font-size: 0.9rem;">
+        &copy; 2026 Disaster Help Web Portal. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script>
+    // Update dynamic elements
+    document.addEventListener('DOMContentLoaded', () => {
+      // If user is already logged in, update navbar buttons
+      const session = getSession();
+      if (session) {
+        const navLinks = document.querySelector('.nav-links');
+        if (navLinks) {
+          let dashHref = session.role === 'admin' ? 'admin-dashboard.html'
+                       : session.role === 'volunteer' ? 'volunteer-dashboard.html'
+                       : 'victim-dashboard.html';
+          const roleLabel = session.role.charAt(0).toUpperCase() + session.role.slice(1);
+          navLinks.innerHTML = `
+            <a href="#how-it-works">How it Works</a>
+            <span class="text-muted" style="font-size:0.85rem;">Logged in as <strong style="color:var(--primary-color)">${session.name}</strong> (${roleLabel})</span>
+            <a href="${dashHref}" class="btn btn-primary"><i class="fa-solid fa-table-columns"></i> My Dashboard</a>
+            <a href="#" id="logoutNavBtn" class="btn btn-secondary"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+          `;
+          document.getElementById('logoutNavBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            clearSession();
+            window.location.reload();
+          });
+        }
+      }
+
+      // CTA Button logic — role-aware routing, NEVER auto-logs out
+      function goAsRole(requiredRole) {
+        const s = getSession();
+        if (s) {
+          if (s.role === requiredRole) {
+            // Already the right role → go straight to dashboard
+            if (requiredRole === 'volunteer') { window.location.href = 'volunteer-dashboard.html'; return; }
+            if (requiredRole === 'victim')    { window.location.href = 'victim-dashboard.html';    return; }
+          }
+          // Different role logged in → go to login with requested role shown,
+          // but DON'T clear session here. Login page will prompt them.
+          window.location.href = 'login.html?role=' + requiredRole;
+          return;
+        }
+        // Not logged in → go to login with correct tab pre-selected
+        window.location.href = 'login.html?role=' + requiredRole;
+      }
+
+      document.getElementById('ctaVictim').addEventListener('click', () => goAsRole('victim'));
+      document.getElementById('ctaVolunteer').addEventListener('click', () => goAsRole('volunteer'));
+
+      // Check for active alerts
+      const db = getDb();
+      if (db.alerts && db.alerts.length > 0) {
+        const activeAlerts = db.alerts.filter(a => a.active);
+        if (activeAlerts.length > 0) {
+          const ticker = document.getElementById('globalTicker');
+          const tickerText = document.getElementById('tickerText');
+          tickerText.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <strong>EMERGENCY ALERT:</strong> ${activeAlerts[0].message}`;
+          ticker.style.display = 'flex';
+        }
+      }
+
+      // Update mock stats
+      const volsCount = db.users.filter(u => u.role === 'volunteer').length;
+      document.getElementById('statUsers').textContent = volsCount > 0 ? volsCount : '124';
+      const reqsCount = db.requests.filter(r => r.status === 'resolved').length;
+      document.getElementById('statReqs').textContent = reqsCount > 0 ? reqsCount : '8,432';
+    });
+  </script>
+</body>
+</html>

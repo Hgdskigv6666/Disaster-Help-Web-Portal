@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Victim Dashboard - Disaster Help Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Navbar Basic -->
+  <nav class="navbar" style="padding: 0.5rem 0;">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" style="font-size: 1.2rem;">
+        <i class="fa-solid fa-heart-pulse"></i> Disaster Help
+      </a>
+      <!-- Mobile sidebar toggle could go here -->
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="user-profile">
+        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+        <div class="user-name" id="userNameDisplay">Loading...</div>
+        <div class="user-role">Victim</div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="#" class="sidebar-link active"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="#" class="sidebar-link" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h2>Need Help?</h2>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Request Help Form -->
+        <div class="card glass-panel">
+          <h3 class="card-title"><i class="fa-solid fa-hand-holding-medical"></i> Request Assistance</h3>
+          <form id="requestForm">
+            <div class="form-group">
+              <label class="form-label">Type of Help</label>
+              <select id="reqType" class="form-control" required style="appearance: auto;">
+                <option value="">Select help type...</option>
+                <option value="Food/Water">Food & Water</option>
+                <option value="Medical">Medical Emergency</option>
+                <option value="Rescue">Needs Rescue/Evacuation</option>
+                <option value="Shelter">Shelter/Accommodation</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Details</label>
+              <textarea id="reqDesc" class="form-control" rows="3" placeholder="Describe your situation..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <button type="button" id="getLocationBtn" class="btn btn-secondary w-100 mb-2">
+                <i class="fa-solid fa-location-crosshairs"></i> Get Current Location
+              </button>
+              <div id="map"></div>
+              <input type="hidden" id="latInput">
+              <input type="hidden" id="lngInput">
+              <small class="text-muted mt-1" id="locationStatus">Location not set. Click map to pin or use button above.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">Submit Request</button>
+          </form>
+        </div>
+
+        <!-- Right Column Group -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- SOS Button -->
+          <div class="card glass-panel sos-container">
+            <h3 class="card-title text-center" style="justify-content: center; border: none; margin-bottom: 0.5rem;">Emergency SOS</h3>
+            <p class="text-muted text-center mb-4" style="font-size: 0.85rem;">Press only in life-threatening situations.</p>
+            <div class="sos-btn" id="sosBtn">SOS</div>
+          </div>
+
+          <!-- My Requests -->
+          <div class="card glass-panel" style="flex: 1;">
+            <h3 class="card-title"><i class="fa-solid fa-list"></i> My Requests</h3>
+            <div class="request-list" id="myRequestsList">
+              <!-- JS will populate this -->
+              <p class="text-muted text-center" style="padding: 2rem 0;">No active requests.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/data.js"></script>
+  <script src="js/victim.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Disaster Help Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    /* Admin specific styles */
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--border-radius);
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+    }
+
+    .stat-blue { background: linear-gradient(135deg, var(--info), #0091ea); }
+    .stat-green { background: linear-gradient(135deg, var(--success), #00c853); }
+    .stat-orange { background: linear-gradient(135deg, var(--warning), #ff6d00); }
+    .stat-red { background: linear-gradient(135deg, var(--danger), #d50000); }
+
+    .stat-info h4 { margin: 0; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; text-transform: uppercase; }
+    .stat-info h2 { margin: 0; font-size: 2rem; font-weight: 800; }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 992px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" style="padding: 0.5rem 0;">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" style="font-size: 1.2rem;">
+        <i class="fa-solid fa-heart-pulse"></i> Disaster Help <span style="font-size: 0.8rem; color: var(--danger); font-weight: 500;">/ Admin Center</span>
+      </a>
+      <div class="nav-links">
+         <span id="userNameDisplay" class="text-muted" style="font-size: 0.9rem; margin-right: 1rem;">Admin</span>
+         <a href="#" class="btn btn-secondary" id="logoutBtn" style="padding: 0.5rem 1rem; font-size: 0.9rem;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="max-width: 1400px; padding-top: 2rem;">
+    
+    <!-- Stats Row -->
+    <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+      <div class="stat-card">
+        <div class="stat-icon stat-blue"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-info">
+          <h4>Total Victims</h4>
+          <h2 id="statVictims">0</h2>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-green"><i class="fa-solid fa-handshake-angle"></i></div>
+        <div class="stat-info">
+          <h4>Total Volunteers</h4>
+          <h2 id="statVols">0</h2>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-orange"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div class="stat-info">
+          <h4>Pending Requests</h4>
+          <h2 id="statPending">0</h2>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-red"><i class="fa-solid fa-truck-medical"></i></div>
+        <div class="stat-info">
+          <h4>Active Emergencies</h4>
+          <h2 id="statEmergencies">0</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Broadcast & Charts Row -->
+    <div class="admin-grid">
+      <!-- Broadcast -->
+      <div class="card glass-panel">
+        <h3 class="card-title" style="color: var(--warning)"><i class="fa-solid fa-bullhorn"></i> Broadcast Emergency Alert</h3>
+        <p class="text-muted" style="margin-bottom: 1.5rem; font-size: 0.9rem;">This message will appear on the landing page for all visitors.</p>
+        <form id="broadcastForm">
+          <div class="form-group">
+            <input type="text" id="alertMsg" class="form-control" placeholder="e.g. Tsunami Warning for Coastal Region. Evacuate Immediately." required>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary" style="background: var(--warning); color: #000; flex: 1;">Publish Alert</button>
+            <button type="button" id="clearAlertBtn" class="btn btn-secondary">Clear Alert</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Chart -->
+      <div class="card glass-panel">
+        <h3 class="card-title"><i class="fa-solid fa-chart-pie"></i> Requests by Status</h3>
+        <div style="height: 200px; position: relative;">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables Row -->
+    <div class="admin-grid">
+      
+      <!-- Recent Requests -->
+      <div class="card glass-panel" style="overflow: hidden;">
+        <h3 class="card-title"><i class="fa-solid fa-list-check"></i> Recent Helper Requests</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Victim</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reqTableBody">
+              <!-- JS Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Users -->
+      <div class="card glass-panel" style="overflow: hidden;">
+        <h3 class="card-title"><i class="fa-solid fa-users-gear"></i> System Users</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Phone</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody">
+              <!-- JS Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
